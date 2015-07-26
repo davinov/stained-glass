@@ -7,8 +7,24 @@ class StainedGlass
   polygon: (d) -> "M#{d.join 'L'}Z"
 
   generateDistribution: ->
+    polygonNumber = @options.polygons or 100
+    lineHeight = (@width - 1) / Math.sqrt polygonNumber
+    columnHeight = (@height - 1) / Math.sqrt polygonNumber
+
+    @options.deviation = 0.2 unless @options?.deviation?
+
     @vertices = d3.range @options.polygons or 100
-    .map (d) => [Math.random() * @width, Math.random() * @height]
+      .map (d, i) =>
+        ix = Math.floor i % (@width / columnHeight)
+        iy = Math.floor i / @width * columnHeight
+
+        centerX = ix * columnHeight + columnHeight / 2
+        centerY = iy * lineHeight + lineHeight / 2
+
+        x = d3.random.normal(centerX, columnHeight * @options.deviation)()
+        y = d3.random.normal(centerY, lineHeight * @options.deviation)()
+
+        @ensureInBounds x, y
 
     @voronoi = d3.geom.voronoi()
     .clipExtent [
@@ -66,14 +82,18 @@ class StainedGlass
     .drawImage @img, 0, 0, @width, @height
 
   getImageColors: (x, y) ->
-    # Ensure bound are not crossed
-    x = d3.max [0, x]
-    y = d3.max [0, y]
-    x = d3.min [x, @width - 1]
-    y = d3.min [y, @height - 1]
+    [x, y] = @ensureInBounds x, y
 
     @canvas.getContext '2d'
     .getImageData x, y, 1, 1
     .data
+
+  # Ensure bound are not crossed
+  ensureInBounds: (x, y) ->
+    x = d3.max [0, x]
+    y = d3.max [0, y]
+    x = d3.min [x, @width - 1]
+    y = d3.min [y, @height - 1]
+    [x, y]
 
 window.StainedGlass = StainedGlass

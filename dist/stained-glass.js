@@ -16,9 +16,23 @@
     };
 
     StainedGlass.prototype.generateDistribution = function() {
+      var columnHeight, lineHeight, polygonNumber, ref;
+      polygonNumber = this.options.polygons || 100;
+      lineHeight = (this.width - 1) / Math.sqrt(polygonNumber);
+      columnHeight = (this.height - 1) / Math.sqrt(polygonNumber);
+      if (((ref = this.options) != null ? ref.deviation : void 0) == null) {
+        this.options.deviation = 0.2;
+      }
       this.vertices = d3.range(this.options.polygons || 100).map((function(_this) {
-        return function(d) {
-          return [Math.random() * _this.width, Math.random() * _this.height];
+        return function(d, i) {
+          var centerX, centerY, ix, iy, x, y;
+          ix = Math.floor(i % (_this.width / columnHeight));
+          iy = Math.floor(i / _this.width * columnHeight);
+          centerX = ix * columnHeight + columnHeight / 2;
+          centerY = iy * lineHeight + lineHeight / 2;
+          x = d3.random.normal(centerX, columnHeight * _this.options.deviation)();
+          y = d3.random.normal(centerY, lineHeight * _this.options.deviation)();
+          return _this.ensureInBounds(x, y);
         };
       })(this));
       this.voronoi = d3.geom.voronoi().clipExtent([[0, 0], [this.width, this.height]]);
@@ -67,11 +81,17 @@
     };
 
     StainedGlass.prototype.getImageColors = function(x, y) {
+      var ref;
+      ref = this.ensureInBounds(x, y), x = ref[0], y = ref[1];
+      return this.canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+    };
+
+    StainedGlass.prototype.ensureInBounds = function(x, y) {
       x = d3.max([0, x]);
       y = d3.max([0, y]);
       x = d3.min([x, this.width - 1]);
       y = d3.min([y, this.height - 1]);
-      return this.canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+      return [x, y];
     };
 
     return StainedGlass;
