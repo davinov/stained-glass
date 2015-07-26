@@ -32,6 +32,7 @@ class StainedGlass
         [@width, @height]
       ]
 
+    # Replace the image by the svg element
     d3.select @img
     .style
       display: 'none'
@@ -41,6 +42,9 @@ class StainedGlass
     .attr 'width', @width
     .attr 'height', @height
     .classed 'stained-glass', true
+
+    # Redtore original classes
+    @svg.classed c, true for c in @img.classList
 
     @pathGroup = @svg.append 'g'
 

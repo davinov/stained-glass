@@ -16,7 +16,7 @@
     };
 
     StainedGlass.prototype.generateDistribution = function() {
-      var columnHeight, lineHeight, polygonNumber, ref;
+      var c, columnHeight, j, len, lineHeight, polygonNumber, ref, ref1;
       polygonNumber = this.options.polygons || 100;
       lineHeight = (this.width - 1) / Math.sqrt(polygonNumber);
       columnHeight = (this.height - 1) / Math.sqrt(polygonNumber);
@@ -40,6 +40,11 @@
         display: 'none'
       });
       this.svg = d3.select(this.img.parentNode).append('svg').attr('width', this.width).attr('height', this.height).classed('stained-glass', true);
+      ref1 = this.img.classList;
+      for (j = 0, len = ref1.length; j < len; j++) {
+        c = ref1[j];
+        this.svg.classed(c, true);
+      }
       this.pathGroup = this.svg.append('g');
       return this.updateDistribution();
     };
