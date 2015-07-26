@@ -7,6 +7,9 @@
       this.img = img;
       this.options = options;
       ref = this.img, this.width = ref.width, this.height = ref.height;
+      if (this.options == null) {
+        this.options = {};
+      }
       this.mapImageColors();
       this.generateDistribution();
     }
@@ -36,10 +39,12 @@
         };
       })(this));
       this.voronoi = d3.geom.voronoi().clipExtent([[0, 0], [this.width, this.height]]);
+      this.svg = d3.select(this.img.parentNode).insert('svg').attr('height', this.height).attr('width', this.width).style({
+        display: 'inline-block'
+      }).classed('stained-glass', true);
       d3.select(this.img).style({
         display: 'none'
       });
-      this.svg = d3.select(this.img.parentNode).append('svg').attr('width', this.width).attr('height', this.height).classed('stained-glass', true);
       ref1 = this.img.classList;
       for (j = 0, len = ref1.length; j < len; j++) {
         c = ref1[j];

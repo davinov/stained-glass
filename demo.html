@@ -7,37 +7,39 @@
     <title>Stained Glass basic example</title>
     <style>
     html, body {
-      height: 100%;
-      width: 100%;
-      margin: 0 0;
-      padding: 0 0;
       text-align: center;
-      cursor: pointer;
-      display: flex;
-      flex-align: center;
-      font-size: 0;
     }
 
-    .stained-glass, img {
-      width: 100%;
-      height: 100%;
+    img, .stained-glass {
+      max-width: 50%;
     }
     </style>
   </head>
   <body>
+    <h1>StainedGlass</h1>
+    <small>The church has no more exclusivity on them.</small>
+
+    <section>
+      <h2>Apply StainedGlass to a picture</h2>
+      <script>
+        function example1() {
+          new StainedGlass(document.getElementById('example-1'));
+        }
+      </script>
+      <button onclick='example1()'>Execute</button>
+      <pre>
+        new StainedGlass(document.getElementById('example-1'));
+      </pre>
+      <img id="example-1" src="examples/1.jpg">
+    </section>
+
+    <p>Requires d3.js</p>
+
     <!-- <input type="file" id="fileInput"> -->
-    <img src="example.jpg" class="sample-class" id="image">
 
   <script src="bower_components/d3/d3.js"></script>
   <script src="dist/stained-glass.js"></script>
   <script>
-    new StainedGlass(document.getElementById('image'), {
-      polygons: 100,
-      stroke: 'black',
-      strokeWidth: 3,
-      deviation: 0.3,
-    });
-
     // var fileInput = document.getElementById('fileInput');
     // fileInput.addEventListener('change', function(e) {
     //   var file = fileInput.files[0];

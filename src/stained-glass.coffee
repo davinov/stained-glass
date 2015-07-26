@@ -1,6 +1,7 @@
 class StainedGlass
   constructor: (@img, @options) ->
     {@width, @height} = @img
+    @options = {} unless @options?
     @mapImageColors()
     @generateDistribution()
 
@@ -33,17 +34,21 @@ class StainedGlass
       ]
 
     # Replace the image by the svg element
+    @svg = d3.select @img.parentNode
+    .insert 'svg'
+    .attr 'height', @height
+    .attr 'width', @width
+    .style
+      display: 'inline-block'
+      # height: "#{@height}px"
+      # width: "#{@width}px"
+    .classed 'stained-glass', true
+
     d3.select @img
     .style
       display: 'none'
 
-    @svg = d3.select @img.parentNode
-    .append 'svg'
-    .attr 'width', @width
-    .attr 'height', @height
-    .classed 'stained-glass', true
-
-    # Redtore original classes
+    # Restore original classes
     @svg.classed c, true for c in @img.classList
 
     @pathGroup = @svg.append 'g'
@@ -67,8 +72,6 @@ class StainedGlass
     @updateColors()
 
   updateColors: ->
-
-
     @pathGroup.selectAll 'path'
     .each (d) =>
       colors = @getImageColors Math.round(d.point[0]), Math.round(d.point[1])
