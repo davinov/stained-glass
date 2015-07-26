@@ -36,11 +36,10 @@
         };
       })(this));
       this.voronoi = d3.geom.voronoi().clipExtent([[0, 0], [this.width, this.height]]);
-      this.svg = d3.select('body').append('svg').attr('width', this.width).attr('height', this.height).style({
-        position: 'absolute',
-        top: 0,
-        left: 0
+      d3.select(this.img).style({
+        display: 'none'
       });
+      this.svg = d3.select(this.img.parentNode).append('svg').attr('width', this.width).attr('height', this.height).classed('stained-glass', true);
       this.pathGroup = this.svg.append('g');
       return this.updateDistribution();
     };

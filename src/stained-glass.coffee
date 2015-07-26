@@ -32,14 +32,15 @@ class StainedGlass
         [@width, @height]
       ]
 
-    @svg = d3.select 'body'
+    d3.select @img
+    .style
+      display: 'none'
+
+    @svg = d3.select @img.parentNode
     .append 'svg'
     .attr 'width', @width
     .attr 'height', @height
-    .style
-      position: 'absolute'
-      top: 0
-      left: 0
+    .classed 'stained-glass', true
 
     @pathGroup = @svg.append 'g'
 
@@ -62,6 +63,8 @@ class StainedGlass
     @updateColors()
 
   updateColors: ->
+
+
     @pathGroup.selectAll 'path'
     .each (d) =>
       colors = @getImageColors Math.round(d.point[0]), Math.round(d.point[1])
