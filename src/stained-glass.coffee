@@ -39,6 +39,7 @@ class StainedGlass
     path.enter()
     .append 'path'
     .attr 'd', @polygon
+    .style 'stroke-width', @options.strokeWidth or 1.51
 
     path.order()
 
@@ -46,9 +47,14 @@ class StainedGlass
 
   updateColors: ->
     @pathGroup.selectAll 'path'
-    .attr 'fill', (d) =>
+    .each (d) =>
       colors = @getImageColors Math.round(d.point[0]), Math.round(d.point[1])
-      return "rgb(#{colors[0]},#{colors[1]},#{colors[2]})"
+      d.color = "rgb(#{colors[0]},#{colors[1]},#{colors[2]})"
+    .attr 'fill', (d) -> d.color
+    .style 'stroke', (d) =>
+      return d.color unless @options.stroke
+      @options.stroke
+    .style 'stroke-width', @options.strokeWidth or 1.51
 
   mapImageColors: ->
     @canvas = document.createElement 'canvas'

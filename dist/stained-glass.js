@@ -35,19 +35,28 @@
       var path;
       path = this.pathGroup.selectAll('path').data(this.voronoi(this.vertices), this.polygon);
       path.exit().remove();
-      path.enter().append('path').attr('d', this.polygon);
+      path.enter().append('path').attr('d', this.polygon).style('stroke-width', this.options.strokeWidth || 1.51);
       path.order();
       return this.updateColors();
     };
 
     StainedGlass.prototype.updateColors = function() {
-      return this.pathGroup.selectAll('path').attr('fill', (function(_this) {
+      return this.pathGroup.selectAll('path').each((function(_this) {
         return function(d) {
           var colors;
           colors = _this.getImageColors(Math.round(d.point[0]), Math.round(d.point[1]));
-          return "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+          return d.color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
         };
-      })(this));
+      })(this)).attr('fill', function(d) {
+        return d.color;
+      }).style('stroke', (function(_this) {
+        return function(d) {
+          if (!_this.options.stroke) {
+            return d.color;
+          }
+          return _this.options.stroke;
+        };
+      })(this)).style('stroke-width', this.options.strokeWidth || 1.51);
     };
 
     StainedGlass.prototype.mapImageColors = function() {
