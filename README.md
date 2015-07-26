@@ -1,8 +1,8 @@
 # StainedGlass
 Awesome stained pictures are no more exclusivity of church.
 
-## Apply to a picture
-For a nice replacement, ensure not to have particular styles on the `img` element.
+For a nice replacement, ensure that you have no particular styles on the `img` element,
+or apply the same to `.stained-glass`.
 
 ```JavaScript
   new StainedGlass(HTMLImageElement, [options]);
