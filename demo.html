@@ -39,7 +39,9 @@
   <script src="bower_components/d3/d3.js"></script>
   <script src="dist/stained-glass.js"></script>
   <script>
-    new StainedGlass(document.getElementById('image'));
+    new StainedGlass(document.getElementById('image'), {
+      polygons: 300
+    });
 
     // var fileInput = document.getElementById('fileInput');
     // fileInput.addEventListener('change', function(e) {

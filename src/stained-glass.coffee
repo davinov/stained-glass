@@ -1,5 +1,5 @@
 class StainedGlass
-  constructor: (@img, options) ->
+  constructor: (@img, @options) ->
     {@width, @height} = @img
     @mapImageColors()
     @generateDistribution()
@@ -7,7 +7,7 @@ class StainedGlass
   polygon: (d) -> "M#{d.join 'L'}Z"
 
   generateDistribution: ->
-    @vertices = d3.range 100
+    @vertices = d3.range @options.polygons or 100
     .map (d) => [Math.random() * @width, Math.random() * @height]
 
     @voronoi = d3.geom.voronoi()

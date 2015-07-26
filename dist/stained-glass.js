@@ -5,6 +5,7 @@
     function StainedGlass(img, options) {
       var ref;
       this.img = img;
+      this.options = options;
       ref = this.img, this.width = ref.width, this.height = ref.height;
       this.mapImageColors();
       this.generateDistribution();
@@ -15,7 +16,7 @@
     };
 
     StainedGlass.prototype.generateDistribution = function() {
-      this.vertices = d3.range(100).map((function(_this) {
+      this.vertices = d3.range(this.options.polygons || 100).map((function(_this) {
         return function(d) {
           return [Math.random() * _this.width, Math.random() * _this.height];
         };
