@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stained Glass</title>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.5/lumen/bootstrap.min.css" rel="stylesheet">
+    <style>
+    pre {
+      text-align: left;
+    }
+
+    img, .stained-glass {
+      max-width: 100%;
+    }
+
+    section {
+      padding-bottom: 2em;
+    }
+    </style>
+  </head>
+  <body class="container">
+    <h1 class="page-header text-center">
+      StainedGlass
+      <p class="lead">The church has no more exclusivity on them.</p>
+    </h1>
+
+    <section class="row">
+      <div class="col-xs-6">
+        <h3>Apply StainedGlass to a picture</h3>
+        <script>
+          function example1() {
+            new StainedGlass(document.getElementById('example-1'));
+          }
+        </script>
+        <pre>new StainedGlass(document.getElementById('example-1'));</pre>
+        <hr>
+        <button class="btn" onclick='example1()'>Execute</button>
+      </div>
+      <div class="col-xs-6">
+        <img id="example-1" src="examples/1.jpg">
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-xs-6">
+        <h3>Add more/less granularity</h3>
+        <script>
+          function example2() {
+            new StainedGlass(document.getElementById('example-2'), {
+              polygons: 300
+            });
+          }
+        </script>
+        <pre>new StainedGlass(document.getElementById('example-2'), {
+  polygons: 300 // default: 100
+});</pre>
+        <hr>
+        <button class="btn" onclick='example2()'>Execute</button>
+      </div>
+      <div class="col-xs-6">
+        <img id="example-2" src="examples/2.jpg">
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-xs-6">
+        <h3>Play with regularity</h3>
+        <script>
+          function example3() {
+            new StainedGlass(document.getElementById('example-3'), {
+              deviation: 1
+            });
+            new StainedGlass(document.getElementById('example-3b'), {
+              deviation: 0
+            });
+          }
+        </script>
+        <pre>new StainedGlass(document.getElementById('example-3'), {
+  deviation: 1 // default: 0.2
+});
+
+new StainedGlass(document.getElementById('example-3b'), {
+  deviation: 0 // default: 0.2
+});</pre>
+        <hr>
+        <button class="execute" onclick='example3()'>Execute</button>
+      </div>
+      <div class="col-xs-6">
+        <img id="example-3" src="examples/3.png">
+        <img id="example-3b" src="examples/3.png">
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-xs-6">
+        <h3>Add borders</h3>
+        <script>
+          function example4() {
+            new StainedGlass(document.getElementById('example-4'), {
+              stroke: 'black',
+              strokeWidth: 3
+            });
+          }
+        </script>
+        <pre>new StainedGlass(document.getElementById('example-4'), {
+  stroke: 'black', // uses the color of the shaped by default
+  strokeWidth: 3 // default: 1.52
+});</pre>
+        <hr>
+        <button class="btn" onclick='example4()'>Execute</button>
+      </div>
+      <div class="col-xs-6">
+        <img id="example-4" src="examples/4.jpg">
+      </div>
+    </section>
+
+    <hr>
+
+    <p>Requires d3.js</p>
+    <p>
+      <a href="http://david.nowinsky.net">@davinov</a>, from <a href="http://toucantoco.com">Toucan Toco</a>
+    </p>
+    <p>
+      Inspired by <a href="http://qrohlf.com/trianglify/">Tringlify</a>
+    </p>
+    <!-- <input type="file" id="fileInput"> -->
+
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="dist/stained-glass.js"></script>
+  <script>
+    // var fileInput = document.getElementById('fileInput');
+    // fileInput.addEventListener('change', function(e) {
+    //   var file = fileInput.files[0];
+    //   var imageType = /image.*/;
+    //
+    //   if (file.type.match(imageType)) {
+    //     var reader = new FileReader();
+    //
+    //     reader.onload = function(e) {
+    //       // Create a new image.
+    //       var img = new Image();
+    //       // Set the img src property using the data URL.
+    //       img.src = reader.result;
+    //       debugger
+    //       StainedGlass.getPixels(reader.result, function(err, pixels) {
+    //         if(err) {
+    //           console.log("Bad image path")
+    //           return
+    //         }
+    //         StainedGlass.append(document.body);
+    //       })
+    //     }
+    //
+    //     reader.readAsDataURL(file);
+    //   }
+    // });
+  </script>
+  </body>
+</html>
