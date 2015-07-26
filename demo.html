@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stained Glass basic example</title>
+    <style>
+    html, body {
+      height: 100%;
+      width: 100%;
+      margin: 0 0;
+      padding: 0 0;
+      text-align: center;
+      cursor: pointer;
+      display: flex;
+      flex-align: center;
+      font-size: 0;
+    }
+
+    #fileInput {
+      position: absolute;
+    }
+
+    .pattern, img {
+      width: 100%;
+      height: 100%;
+    }
+
+    svg {
+      opacity: 0.8;
+    }
+    </style>
+  </head>
+  <body>
+    <!-- <input type="file" id="fileInput"> -->
+    <img src="example.jpg" id="image">
+
+  <script src="bower_components/d3/d3.js"></script>
+  <script src="dist/stained-glass.js"></script>
+  <script>
+    new StainedGlass(document.getElementById('image'));
+
+    // var fileInput = document.getElementById('fileInput');
+    // fileInput.addEventListener('change', function(e) {
+    //   var file = fileInput.files[0];
+    //   var imageType = /image.*/;
+    //
+    //   if (file.type.match(imageType)) {
+    //     var reader = new FileReader();
+    //
+    //     reader.onload = function(e) {
+    //       // Create a new image.
+    //       var img = new Image();
+    //       // Set the img src property using the data URL.
+    //       img.src = reader.result;
+    //       debugger
+    //       StainedGlass.getPixels(reader.result, function(err, pixels) {
+    //         if(err) {
+    //           console.log("Bad image path")
+    //           return
+    //         }
+    //         StainedGlass.append(document.body);
+    //       })
+    //     }
+    //
+    //     reader.readAsDataURL(file);
+    //   }
+    // });
+  </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "stained-glass",
+  "version": "0.0.0",
+  "authors": [
+    "David Nowinsky <david@nowinsky.net>"
+  ],
+  "main": "dist/stained-glass.min.js",
+  "license": "GPLv3",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "~3.5.6"
+  }
+}

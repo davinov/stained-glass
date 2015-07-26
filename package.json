@@ -1,0 +1,41 @@
+{
+  "name": "StainedGlass",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/stained-glass.js",
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/davinov/stained-glass.git"
+  },
+  "keywords": [
+    "svg",
+    "stained glass",
+    "d3.js"
+  ],
+  "author": "David Nowinsky <david@nowinsky.net>",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/davinov/stained-glass/issues"
+  },
+  "homepage": "https://github.com/davinov/stained-glass",
+  "scripts": {
+    "start": "gulp --require coffee-script/register"
+  },
+  "devDependencies": {
+    "del": "^0.1.1",
+    "gulp": "^3.8.6",
+    "gulp-coffee": "^2.3.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^0.3.1"
+  },
+  "npmName": "stained-glass",
+  "npmFileMap": [
+    {
+      "basePath": "dist",
+      "files": [
+        "stained-glass.min.js"
+      ]
+    }
+  ]
+}
