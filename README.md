@@ -13,3 +13,4 @@ or apply the same to `.stained-glass`.
 - `polygons`: number of created polygons (default 100)
 - `stroke`: default same as the fill color
 - `strokeWidth`: (default 1.51)
+- `triangles`: generate Delaunay vertices instead of Voronoï (default false)

@@ -8,13 +8,13 @@ class StainedGlass
   polygon: (d) -> "M#{d.join 'L'}Z"
 
   generateDistribution: ->
-    polygonNumber = @options.polygons or 100
-    lineHeight = (@width - 1) / Math.sqrt polygonNumber
-    columnHeight = (@height - 1) / Math.sqrt polygonNumber
+    @polygonNumber = @options.polygons or 100
+    lineHeight = (@width - 1) / Math.sqrt @polygonNumber
+    columnHeight = (@height - 1) / Math.sqrt @polygonNumber
 
     @options.deviation = 0.2 unless @options?.deviation?
 
-    @vertices = d3.range @options.polygons or 100
+    @vertices = d3.range @polygonNumber
       .map (d, i) =>
         ix = Math.floor i % (@width / columnHeight)
         iy = Math.floor i / @width * columnHeight
@@ -27,11 +27,16 @@ class StainedGlass
 
         @ensureInBounds x, y
 
-    @voronoi = d3.geom.voronoi()
-    .clipExtent [
-        [0, 0]
-        [@width, @height]
-      ]
+    if @options.triangles
+      @vertices = @vertices.concat @calculateSidePoints()
+      @geom = d3.geom.delaunay
+
+    else
+      @geom = d3.geom.voronoi()
+      .clipExtent [
+          [0, 0]
+          [@width, @height]
+        ]
 
     # Replace the image by the svg element
     @svg = d3.select @img.parentNode
@@ -57,7 +62,7 @@ class StainedGlass
 
   updateDistribution: ->
     path = @pathGroup.selectAll 'path'
-    .data @voronoi(@vertices), @polygon
+    .data @geom(@vertices), @polygon
 
     path.exit()
     .remove()
@@ -74,8 +79,16 @@ class StainedGlass
   updateColors: ->
     @pathGroup.selectAll 'path'
     .each (d) =>
+      unless d.point
+        # Calculate the center of the triangle
+        d.point = [
+          (d[0][0] + d[1][0] + d[2][0]) / 3
+          (d[0][1] + d[1][1] + d[2][1]) / 3
+        ]
       colors = @getImageColors Math.round(d.point[0]), Math.round(d.point[1])
       d.color = "rgb(#{colors[0]},#{colors[1]},#{colors[2]})"
+
+    @pathGroup.selectAll 'path'
     .attr 'fill', (d) -> d.color
     .style 'stroke', (d) =>
       return d.color unless @options.stroke
@@ -105,5 +118,25 @@ class StainedGlass
     x = d3.min [x, @width - 1]
     y = d3.min [y, @height - 1]
     [x, y]
+
+  # returns coordinates of points to add on the sides
+  # for to the triangles distribution
+  calculateSidePoints: ->
+    horizontalSidePointsNumber = Math.sqrt(@polygonNumber) * @width / @height
+    verticalSidePointsNumber = Math.sqrt(@polygonNumber) * @height / @width
+
+    sidePoints = []
+    for x in [0..horizontalSidePointsNumber]
+      xPoint = x * @width / horizontalSidePointsNumber
+      sidePoints.push [xPoint, 0]
+      sidePoints.push [xPoint, @height - 1]
+    for y in [0..verticalSidePointsNumber]
+      yPoint = y * @height / verticalSidePointsNumber
+      sidePoints.push [0, yPoint]
+      sidePoints.push [@width - 1, yPoint]
+
+    sidePoints.push [@width - 1, @height - 1]
+
+    sidePoints
 
 window.StainedGlass = StainedGlass

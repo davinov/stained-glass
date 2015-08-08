@@ -19,14 +19,14 @@
     };
 
     StainedGlass.prototype.generateDistribution = function() {
-      var c, columnHeight, j, len, lineHeight, polygonNumber, ref, ref1;
-      polygonNumber = this.options.polygons || 100;
-      lineHeight = (this.width - 1) / Math.sqrt(polygonNumber);
-      columnHeight = (this.height - 1) / Math.sqrt(polygonNumber);
+      var c, columnHeight, j, len, lineHeight, ref, ref1;
+      this.polygonNumber = this.options.polygons || 100;
+      lineHeight = (this.width - 1) / Math.sqrt(this.polygonNumber);
+      columnHeight = (this.height - 1) / Math.sqrt(this.polygonNumber);
       if (((ref = this.options) != null ? ref.deviation : void 0) == null) {
         this.options.deviation = 0.2;
       }
-      this.vertices = d3.range(this.options.polygons || 100).map((function(_this) {
+      this.vertices = d3.range(this.polygonNumber).map((function(_this) {
         return function(d, i) {
           var centerX, centerY, ix, iy, x, y;
           ix = Math.floor(i % (_this.width / columnHeight));
@@ -38,7 +38,12 @@
           return _this.ensureInBounds(x, y);
         };
       })(this));
-      this.voronoi = d3.geom.voronoi().clipExtent([[0, 0], [this.width, this.height]]);
+      if (this.options.triangles) {
+        this.vertices = this.vertices.concat(this.calculateSidePoints());
+        this.geom = d3.geom.delaunay;
+      } else {
+        this.geom = d3.geom.voronoi().clipExtent([[0, 0], [this.width, this.height]]);
+      }
       this.svg = d3.select(this.img.parentNode).insert('svg').attr('height', this.height).attr('width', this.width).style({
         display: 'inline-block'
       }).classed('stained-glass', true);
@@ -56,7 +61,7 @@
 
     StainedGlass.prototype.updateDistribution = function() {
       var path;
-      path = this.pathGroup.selectAll('path').data(this.voronoi(this.vertices), this.polygon);
+      path = this.pathGroup.selectAll('path').data(this.geom(this.vertices), this.polygon);
       path.exit().remove();
       path.enter().append('path').attr('d', this.polygon).style('stroke-width', this.options.strokeWidth || 1.51);
       path.order();
@@ -64,13 +69,17 @@
     };
 
     StainedGlass.prototype.updateColors = function() {
-      return this.pathGroup.selectAll('path').each((function(_this) {
+      this.pathGroup.selectAll('path').each((function(_this) {
         return function(d) {
           var colors;
+          if (!d.point) {
+            d.point = [(d[0][0] + d[1][0] + d[2][0]) / 3, (d[0][1] + d[1][1] + d[2][1]) / 3];
+          }
           colors = _this.getImageColors(Math.round(d.point[0]), Math.round(d.point[1]));
           return d.color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
         };
-      })(this)).attr('fill', function(d) {
+      })(this));
+      return this.pathGroup.selectAll('path').attr('fill', function(d) {
         return d.color;
       }).style('stroke', (function(_this) {
         return function(d) {
@@ -101,6 +110,25 @@
       x = d3.min([x, this.width - 1]);
       y = d3.min([y, this.height - 1]);
       return [x, y];
+    };
+
+    StainedGlass.prototype.calculateSidePoints = function() {
+      var horizontalSidePointsNumber, j, k, ref, ref1, sidePoints, verticalSidePointsNumber, x, xPoint, y, yPoint;
+      horizontalSidePointsNumber = Math.sqrt(this.polygonNumber) * this.width / this.height;
+      verticalSidePointsNumber = Math.sqrt(this.polygonNumber) * this.height / this.width;
+      sidePoints = [];
+      for (x = j = 0, ref = horizontalSidePointsNumber; 0 <= ref ? j <= ref : j >= ref; x = 0 <= ref ? ++j : --j) {
+        xPoint = x * this.width / horizontalSidePointsNumber;
+        sidePoints.push([xPoint, 0]);
+        sidePoints.push([xPoint, this.height - 1]);
+      }
+      for (y = k = 0, ref1 = verticalSidePointsNumber; 0 <= ref1 ? k <= ref1 : k >= ref1; y = 0 <= ref1 ? ++k : --k) {
+        yPoint = y * this.height / verticalSidePointsNumber;
+        sidePoints.push([0, yPoint]);
+        sidePoints.push([this.width - 1, yPoint]);
+      }
+      sidePoints.push([this.width - 1, this.height - 1]);
+      return sidePoints;
     };
 
     return StainedGlass;
