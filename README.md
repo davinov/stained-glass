@@ -14,3 +14,5 @@ or apply the same to `.stained-glass`.
 - `stroke`: default same as the fill color
 - `strokeWidth`: (default 1.51)
 - `triangles`: generate Delaunay vertices instead of Voronoï (default false)
+- `animated`: animate the color of the shapes by selecting colors using original
+  image's point randomly around the original point (default false)

@@ -69,26 +69,40 @@
     };
 
     StainedGlass.prototype.updateColors = function() {
-      this.pathGroup.selectAll('path').each((function(_this) {
-        return function(d) {
-          var colors;
-          if (!d.point) {
-            d.point = [(d[0][0] + d[1][0] + d[2][0]) / 3, (d[0][1] + d[1][1] + d[2][1]) / 3];
-          }
-          colors = _this.getImageColors(Math.round(d.point[0]), Math.round(d.point[1]));
-          return d.color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
-        };
-      })(this));
-      return this.pathGroup.selectAll('path').attr('fill', function(d) {
-        return d.color;
-      }).style('stroke', (function(_this) {
-        return function(d) {
-          if (!_this.options.stroke) {
+      var deviationner, updateTileColor;
+      deviationner = d3.random.normal(0, 10);
+      updateTileColor = (function(_this) {
+        return function(tile, instant, deviations) {
+          var tileAnimation, tileSelection;
+          tileSelection = d3.select(tile);
+          tileSelection.each(function(d) {
+            var colors, x, y;
+            if (!d.point) {
+              d.point = [(d[0][0] + d[1][0] + d[2][0]) / 3, (d[0][1] + d[1][1] + d[2][1]) / 3];
+            }
+            x = Math.round(d.point[0] + deviations[0]);
+            y = Math.round(d.point[1] + deviations[1]);
+            colors = _this.getImageColors(x, y);
+            return d.color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
+          });
+          tileAnimation = tileSelection.transition().ease('linear').duration(instant ? 0 : 2000).attr('fill', function(d) {
             return d.color;
+          }).style('stroke', function(d) {
+            if (!_this.options.stroke) {
+              return d.color;
+            }
+            return _this.options.stroke;
+          }).style('stroke-width', _this.options.strokeWidth || 1.51);
+          if (_this.options.animated) {
+            return tileAnimation.each('end', function() {
+              return updateTileColor(this, false, [deviationner(), deviationner()]);
+            });
           }
-          return _this.options.stroke;
         };
-      })(this)).style('stroke-width', this.options.strokeWidth || 1.51);
+      })(this);
+      return this.pathGroup.selectAll('path').each(function() {
+        return updateTileColor(this, true, [0, 0]);
+      });
     };
 
     StainedGlass.prototype.mapImageColors = function() {

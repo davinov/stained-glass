@@ -77,23 +77,42 @@ class StainedGlass
     @updateColors()
 
   updateColors: ->
-    @pathGroup.selectAll 'path'
-    .each (d) =>
-      unless d.point
-        # Calculate the center of the triangle
-        d.point = [
-          (d[0][0] + d[1][0] + d[2][0]) / 3
-          (d[0][1] + d[1][1] + d[2][1]) / 3
-        ]
-      colors = @getImageColors Math.round(d.point[0]), Math.round(d.point[1])
-      d.color = "rgb(#{colors[0]},#{colors[1]},#{colors[2]})"
+    deviationner = d3.random.normal 0, 10
+
+    updateTileColor = (tile, instant, deviations) =>
+      tileSelection = d3.select tile
+
+      tileSelection
+      .each (d) =>
+        unless d.point
+          # Calculate the center of the triangle
+          d.point = [
+            (d[0][0] + d[1][0] + d[2][0]) / 3
+            (d[0][1] + d[1][1] + d[2][1]) / 3
+          ]
+
+        x = Math.round d.point[0] + deviations[0]
+        y = Math.round d.point[1] + deviations[1]
+        colors = @getImageColors x, y
+        d.color = "rgb(#{colors[0]},#{colors[1]},#{colors[2]})"
+
+      tileAnimation = tileSelection
+      .transition()
+      .ease 'linear'
+      .duration if instant then 0 else 2000
+      .attr 'fill', (d) -> d.color
+      .style 'stroke', (d) =>
+        return d.color unless @options.stroke
+        @options.stroke
+      .style 'stroke-width', @options.strokeWidth or 1.51
+
+      if @options.animated
+        tileAnimation
+        .each 'end', ->
+          updateTileColor this, false, [deviationner(), deviationner()]
 
     @pathGroup.selectAll 'path'
-    .attr 'fill', (d) -> d.color
-    .style 'stroke', (d) =>
-      return d.color unless @options.stroke
-      @options.stroke
-    .style 'stroke-width', @options.strokeWidth or 1.51
+    .each -> updateTileColor this, true, [0, 0]
 
   mapImageColors: ->
     @canvas = document.createElement 'canvas'
