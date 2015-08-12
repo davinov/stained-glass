@@ -31,13 +31,14 @@
       <div class="col-xs-6">
         <h3>Apply StainedGlass to a picture</h3>
         <script>
-          function example1() {
+          function example1(btn) {
             new StainedGlass(document.getElementById('example-1'));
+            btn.disabled = true;
           }
         </script>
         <pre>new StainedGlass(document.getElementById('example-1'));</pre>
         <hr>
-        <button class="btn" onclick='example1()'>Execute</button>
+        <button class="btn" onclick='example1(this)'>Execute</button>
       </div>
       <div class="col-xs-6">
         <img id="example-1" src="examples/1.jpg">
@@ -48,17 +49,18 @@
       <div class="col-xs-6">
         <h3>Add more/less granularity</h3>
         <script>
-          function example2() {
+          function example2(btn) {
             new StainedGlass(document.getElementById('example-2'), {
               polygons: 300
             });
+            btn.disabled = true;
           }
         </script>
         <pre>new StainedGlass(document.getElementById('example-2'), {
-  polygons: 300 // default: 100
+  <strong>polygons: 300</strong> // default: 100
 });</pre>
         <hr>
-        <button class="btn" onclick='example2()'>Execute</button>
+        <button class="btn" onclick='example2(this)'>Execute</button>
       </div>
       <div class="col-xs-6">
         <img id="example-2" src="examples/2.jpg">
@@ -69,24 +71,25 @@
       <div class="col-xs-6">
         <h3>Play with regularity</h3>
         <script>
-          function example3() {
+          function example3(btn) {
             new StainedGlass(document.getElementById('example-3'), {
               deviation: 1
             });
             new StainedGlass(document.getElementById('example-3b'), {
               deviation: 0
             });
+            btn.disabled = true;
           }
         </script>
         <pre>new StainedGlass(document.getElementById('example-3'), {
-  deviation: 1 // default: 0.2
+  <strong>deviation: 1</strong> // default: 0.2
 });
 
 new StainedGlass(document.getElementById('example-3b'), {
-  deviation: 0 // default: 0.2
+  <strong>deviation: 0</strong> // default: 0.2
 });</pre>
         <hr>
-        <button class="execute" onclick='example3()'>Execute</button>
+        <button class="btn" class="execute" onclick='example3(this)'>Execute</button>
       </div>
       <div class="col-xs-6">
         <img id="example-3" src="examples/3.png">
@@ -98,19 +101,20 @@ new StainedGlass(document.getElementById('example-3b'), {
       <div class="col-xs-6">
         <h3>Add borders</h3>
         <script>
-          function example4() {
+          function example4(btn) {
             new StainedGlass(document.getElementById('example-4'), {
               stroke: 'black',
               strokeWidth: 3
             });
+            btn.disabled = true;
           }
         </script>
         <pre>new StainedGlass(document.getElementById('example-4'), {
-  stroke: 'black', // uses the color of the shaped by default
+  <strong>stroke: 'black',</strong> // uses the color of the shaped by default
   strokeWidth: 3 // default: 1.52
 });</pre>
         <hr>
-        <button class="btn" onclick='example4()'>Execute</button>
+        <button class="btn" onclick='example4(this)'>Execute</button>
       </div>
       <div class="col-xs-6">
         <img id="example-4" src="examples/4.jpg">
@@ -121,17 +125,18 @@ new StainedGlass(document.getElementById('example-3b'), {
       <div class="col-xs-6">
         <h3>Triangles</h3>
         <script>
-          function example5() {
+          function example5(btn) {
             new StainedGlass(document.getElementById('example-5'), {
               triangles: true
             });
+            btn.disabled = true;
           }
         </script>
         <pre>new StainedGlass(document.getElementById('example-5'), {
-  triangles: true
+  <strong>triangles: true</strong>
 });</pre>
         <hr>
-        <button class="btn" onclick='example5()'>Execute</button>
+        <button class="btn" onclick='example5(this)'>Execute</button>
       </div>
       <div class="col-xs-6">
         <img id="example-5" src="examples/5.jpg">
@@ -142,19 +147,22 @@ new StainedGlass(document.getElementById('example-3b'), {
       <div class="col-xs-6">
         <h3>Animate</h3>
         <script>
-          function example6() {
+          function example6(btn) {
             new StainedGlass(document.getElementById('example-6'), {
-              animated: true,
-              polygons: 1000,
-              triangles: true
+              polygons: 500,
+              triangles: true,
+              animated: true
             });
+            btn.disabled = true;
           }
         </script>
         <pre>new StainedGlass(document.getElementById('example-6'), {
-  animated: true
+  polygons: 500,
+  triangles: true,
+  <strong>animated: true</strong>
 });</pre>
         <hr>
-        <button class="btn" onclick='example6()'>Execute</button>
+        <button class="btn" onclick='example6(this)'>Execute</button>
       </div>
       <div class="col-xs-6">
         <img id="example-6" src="examples/6.jpg">
