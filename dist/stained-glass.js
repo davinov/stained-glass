@@ -69,11 +69,14 @@
     };
 
     StainedGlass.prototype.updateColors = function() {
-      var deviationner, updateTileColor;
+      var deviationner, self, updateTileColor, xCorrection, yCorrection;
       deviationner = d3.random.normal(0, 10);
+      if (!this.options.animationDuration) {
+        this.options.animationDuration = 2000;
+      }
       updateTileColor = (function(_this) {
         return function(tile, instant, deviations) {
-          var tileAnimation, tileSelection;
+          var animationDuration, tileAnimation, tileSelection;
           tileSelection = d3.select(tile);
           tileSelection.each(function(d) {
             var colors, x, y;
@@ -85,7 +88,8 @@
             colors = _this.getImageColors(x, y);
             return d.color = "rgb(" + colors[0] + "," + colors[1] + "," + colors[2] + ")";
           });
-          tileAnimation = tileSelection.transition().ease('linear').duration(instant ? 0 : 2000).attr('fill', function(d) {
+          animationDuration = instant ? 0 : _this.options.animationDuration;
+          tileAnimation = tileSelection.transition().ease('linear').duration(animationDuration).attr('fill', function(d) {
             return d.color;
           }).style('stroke', function(d) {
             if (!_this.options.stroke) {
@@ -93,16 +97,29 @@
             }
             return _this.options.stroke;
           }).style('stroke-width', _this.options.strokeWidth || 1.51);
-          if (_this.options.animated) {
+          if (_this.options.animated && !_this.options.followCursor) {
             return tileAnimation.each('end', function() {
               return updateTileColor(this, false, [deviationner(), deviationner()]);
             });
           }
         };
       })(this);
-      return this.pathGroup.selectAll('path').each(function() {
+      this.pathGroup.selectAll('path').each(function() {
         return updateTileColor(this, true, [0, 0]);
       });
+      if (this.options.followCursor) {
+        self = this;
+        xCorrection = self.width / self.height / self.polygonNumber * 10;
+        yCorrection = self.height / self.width / self.polygonNumber * 10;
+        return this.pathGroup.on('mousemove', function(e) {
+          var x, y;
+          x = d3.mouse(this)[0];
+          y = d3.mouse(this)[1];
+          return self.pathGroup.selectAll('path').each(function(d) {
+            return updateTileColor(this, false, [(d.point[0] - x) * xCorrection, (d.point[1] - y) * yCorrection]);
+          });
+        });
+      }
     };
 
     StainedGlass.prototype.mapImageColors = function() {

@@ -79,6 +79,8 @@ class StainedGlass
   updateColors: ->
     deviationner = d3.random.normal 0, 10
 
+    @options.animationDuration = 2000 unless @options.animationDuration
+
     updateTileColor = (tile, instant, deviations) =>
       tileSelection = d3.select tile
 
@@ -96,23 +98,40 @@ class StainedGlass
         colors = @getImageColors x, y
         d.color = "rgb(#{colors[0]},#{colors[1]},#{colors[2]})"
 
+      animationDuration = if instant then 0 else @options.animationDuration
+
       tileAnimation = tileSelection
       .transition()
       .ease 'linear'
-      .duration if instant then 0 else 2000
+      .duration animationDuration
       .attr 'fill', (d) -> d.color
       .style 'stroke', (d) =>
         return d.color unless @options.stroke
         @options.stroke
       .style 'stroke-width', @options.strokeWidth or 1.51
 
-      if @options.animated
+      if @options.animated and not @options.followCursor
         tileAnimation
         .each 'end', ->
           updateTileColor this, false, [deviationner(), deviationner()]
 
     @pathGroup.selectAll 'path'
     .each -> updateTileColor this, true, [0, 0]
+
+    if @options.followCursor
+      self = @
+      xCorrection = self.width / self.height / self.polygonNumber * 10
+      yCorrection = self.height / self.width / self.polygonNumber * 10
+
+      @pathGroup
+      .on 'mousemove', (e) ->
+        x = d3.mouse(this)[0]
+        y = d3.mouse(this)[1]
+        self.pathGroup.selectAll 'path'
+        .each (d) -> updateTileColor this, false, [
+          (d.point[0] - x) * xCorrection
+          (d.point[1] - y) * yCorrection
+        ]
 
   mapImageColors: ->
     @canvas = document.createElement 'canvas'
