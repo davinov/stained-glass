@@ -40,7 +40,7 @@ class StainedGlass
 
     # Replace the image by the svg element
     @svg = d3.select @img.parentNode
-    .insert 'svg'
+    .insert 'svg', 'img'
     .attr 'height', @height
     .attr 'width', @width
     .style

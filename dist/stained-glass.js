@@ -44,7 +44,7 @@
       } else {
         this.geom = d3.geom.voronoi().clipExtent([[0, 0], [this.width, this.height]]);
       }
-      this.svg = d3.select(this.img.parentNode).insert('svg').attr('height', this.height).attr('width', this.width).style({
+      this.svg = d3.select(this.img.parentNode).insert('svg', 'img').attr('height', this.height).attr('width', this.width).style({
         display: 'inline-block'
       }).classed('stained-glass', true);
       d3.select(this.img).style({
